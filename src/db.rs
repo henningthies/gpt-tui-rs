@@ -36,6 +36,12 @@ impl Db {
         self.messages.push(message);
     }
 
+    pub fn get_chats(&self) -> Vec<&Chat> {
+        self.chats
+            .iter()
+            .collect()
+    }
+
     pub fn get_chat(&self, id: &Uuid) -> Option<&Chat> {
         self.chats
             .iter()
