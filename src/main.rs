@@ -8,37 +8,21 @@ use tui::widgets::{Block, Borders, List, ListItem};
 use tui::Terminal;
 
 mod config;
-
-fn setup_config() -> config::Config {
-    println!("Setup config. Please provide your api token:");
-    let mut api_token = String::new();
-    io::stdin().read_line(&mut api_token).unwrap();
-    let config = config::Config::new(api_token.trim().to_string());
-    match config.write() {
-        Ok(_) => println!("Config written"),
-        Err(_) => println!("Error writing config"),
-    }
-    config
-}
+mod models;
+mod db;
+mod app;
+mod ui;
 
 fn main() -> Result<(), io::Error> {
+    let db = db::Db::new();
+    let app = app::App::new(&db);
 
-
-
-    let _config = match config::Config::read() {
-        Ok(config) => {
-            if config.api_token.is_empty() {
-                setup_config()
-            } else {
-                config
-            }
-        }
-        Err(_) => setup_config(),
-    };
+    app.draw();
 
     let stdout = io::stdout();
     let backend = CrosstermBackend::new(stdout);
     let mut terminal = Terminal::new(backend)?;
+
     terminal.clear().unwrap();
 
     // Create a block to display some text
