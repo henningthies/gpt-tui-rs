@@ -64,23 +64,18 @@ impl<'a> App<'a> {
                 KeyCode::Esc => {
                     self.state = AppState::Default;
                 },
-                KeyCode::Down => {
+                KeyCode::Down | KeyCode::Char('j') => {
                     if let Some(selected) = self.chat_list_state.selected() {
                         let chat_len = self.db.get_chats().len();
-                        if selected >= chat_len - 1 {
-                            self.chat_list_state.select(Some(0));
-                        } else {
+                        if selected < chat_len - 1  {
                             self.chat_list_state.select(Some(selected + 1));
                         }
                     }
                 },
-                KeyCode::Up => {
+                KeyCode::Up | KeyCode::Char('k') => {
                     if let Some(selected) = self.chat_list_state.selected() {
-                        let chat_len = self.db.get_chats().len();
                         if selected > 0 {
                             self.chat_list_state.select(Some(selected - 1));
-                        } else {
-                            self.chat_list_state.select(Some(chat_len - 1));
                         }
                     }
                 },
